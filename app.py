@@ -2,166 +2,215 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from datetime import datetime, timedelta
 
 # --------------------------
-# 页面设置（英文）
+# Page Setup
 # --------------------------
-st.set_page_config(
-    page_title="Baijiu Stock Analysis System",
-    page_icon="🥃",
-    layout="wide"
-)
+st.set_page_config(page_title="Baijiu Stock Analysis", page_icon="🥃", layout="wide")
 plt.rcParams["font.sans-serif"] = ["DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
 
 # --------------------------
-# 标题与介绍
+# Title
 # --------------------------
 st.title("🥃 Baijiu Industry Stock Analysis System")
-st.markdown("""
-This interactive dashboard provides a professional analysis of leading Chinese baijiu companies, 
-including price trends, key technical indicators, and data-driven investment recommendations.
-""")
+st.markdown("Professional dashboard for price trends, volume structure, and investment strategy.")
 st.divider()
 
 # --------------------------
-# 股票列表
+# Stock List
 # --------------------------
-stock_list = {
-    "Kweichow Moutai": {"base": 1650, "vol": 0.015, "trend": 0.12},
-    "Wuliangye": {"base": 135, "vol": 0.022, "trend": 0.08},
-    "Luzhou Laojiao": {"base": 225, "vol": 0.025, "trend": 0.05},
-    "Shanxi Fenjiu": {"base": 210, "vol": 0.03, "trend": 0.03},
-    "Yanghe Distillery": {"base": 155, "vol": 0.02, "trend": 0.06},
+stock_config = {
+    "Kweichow Moutai":    {"base": 1700, "vol": 0.014, "trend": 0.15},
+    "Wuliangye":         {"base": 140,  "vol": 0.020, "trend": 0.09},
+    "Luzhou Laojiao":    {"base": 230,  "vol": 0.024, "trend": 0.06},
+    "Shanxi Fenjiu":     {"base": 215,  "vol": 0.030, "trend": 0.04},
+    "Yanghe Distillery": {"base": 160,  "vol": 0.021, "trend": 0.08},
 }
 
 with st.sidebar:
     st.header("🔍 Select Stock")
-    selected_company = st.selectbox("Baijiu Company", list(stock_list.keys()))
-    st.caption("Data is simulated based on historical market behavior.")
+    selected = st.selectbox("Company", list(stock_config.keys()))
 
 # --------------------------
-# 生成「更真实」的股价数据
+# Generate Realistic Data + Volume
 # --------------------------
-@st.cache_data
-def generate_realistic_data(company_params):
+@st.cache_data(ttl=3600)
+def generate_data(conf):
     days = 700
-    base_price = company_params["base"]
-    volatility = company_params["vol"]
-    trend_strength = company_params["trend"]
+    base = conf["base"]
+    vol  = conf["vol"]
+    trend = conf["trend"]
 
-    # 1. 基础趋势（长期缓慢上涨，符合白酒股特性）
-    trend = np.linspace(0, trend_strength, days)
-    
-    # 2. 周期性波动（模拟市场情绪、季度效应）
-    cycles = 0.05 * np.sin(np.linspace(0, 10 * np.pi, days))
-    
-    # 3. 随机波动（市场噪音）
-    np.random.seed(hash(selected_company) % 42)
-    noise = np.random.normal(0, volatility, days)
-    
-    # 合成价格序列
-    daily_returns = trend + cycles + noise
-    prices = base_price * np.cumprod(1 + daily_returns)
-    
-    dates = pd.date_range(end=pd.Timestamp.now(), periods=days)
-    df = pd.DataFrame({"Close": prices}, index=dates)
+    np.random.seed(42 + hash(selected) % 1000)
+
+    trend_line  = np.linspace(0, trend, days)
+    cycle       = 0.06 * np.sin(np.linspace(0, 8 * np.pi, days))
+    noise       = np.random.normal(0, vol, days)
+    ret         = trend_line + cycle + noise
+    close       = base * np.cumprod(1 + ret)
+
+    vol_noise    = np.random.lognormal(0, 0.7, days)
+    vol_trend    = 1 + 0.8 * np.sin(np.linspace(0, 4 * np.pi, days))
+    volume       = (vol_noise * vol_trend * 1000).astype(int)
+
+    idx = pd.date_range(end=pd.Timestamp.now(), periods=days)
+    df = pd.DataFrame({
+        "Close": close,
+        "Volume": volume
+    }, index=idx)
     return df
 
-df = generate_realistic_data(stock_list[selected_company])
-close_prices = df["Close"]
+df = generate_data(stock_config[selected])
+close = df["Close"]
+vol   = df["Volume"]
 
 # --------------------------
-# 计算专业指标
+# Indicators
 # --------------------------
-current_price = close_prices.iloc[-1]
-start_price = close_prices.iloc[0]
-ma20 = close_prices.rolling(20).mean().iloc[-1]
-ma60 = close_prices.rolling(60).mean().iloc[-1]
-ma120 = close_prices.rolling(120).mean().iloc[-1]
+current   = close.iloc[-1]
+ma20      = close.rolling(20).mean().iloc[-1]
+ma60      = close.rolling(60).mean().iloc[-1]
+ma120     = close.rolling(120).mean().iloc[-1]
+dev       = (current - ma60) / ma60
 
-# 趋势判断（基于均线排列，比简单首尾比较更专业）
+# Trend
 if ma20 > ma60 and ma60 > ma120:
     trend = "Strong Uptrend"
+elif ma20 > ma60:
+    trend = "Moderate Uptrend"
 elif ma20 < ma60 and ma60 < ma120:
     trend = "Strong Downtrend"
-elif current_price > ma60:
-    trend = "Moderate Uptrend"
 else:
-    trend = "Sideways/Weak"
+    trend = "Sideways / Range Bound"
 
-# 估值状态（基于当前价与均线的偏离度）
-deviation = (current_price - ma60) / ma60
-if deviation > 0.15:
-    valuation = "Significantly Overvalued"
-elif deviation > 0.05:
-    valuation = "Modestly Overvalued"
-elif deviation < -0.15:
-    valuation = "Significantly Undervalued"
-elif deviation < -0.05:
-    valuation = "Modestly Undervalued"
+# Valuation
+if dev > 0.15:
+    val = "Significantly Overvalued"
+elif dev > 0.05:
+    val = "Slightly Overvalued"
+elif dev < -0.15:
+    val = "Significantly Undervalued"
+elif dev < -0.05:
+    val = "Slightly Undervalued"
 else:
-    valuation = "Fairly Valued"
+    val = "Fairly Valued"
 
 # --------------------------
-# 可视化（优化图表）
+# Chart: Price + Volume
 # --------------------------
-col1, col2 = st.columns([2, 1])
+st.subheader("📈 Price & Volume Trend")
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 6), gridspec_kw={"height_ratios": [3, 1]}, sharex=True)
 
-with col1:
-    st.subheader("📈 Price Trend & Moving Averages")
-    fig, ax = plt.subplots(figsize=(12, 5))
-    ax.plot(close_prices, color="#8B0000", linewidth=1.5, label="Closing Price")
-    ax.plot(close_prices.rolling(20).mean(), color="#FFA500", linestyle="--", linewidth=1, label="20-Day MA")
-    ax.plot(close_prices.rolling(60).mean(), color="#1f77b4", linestyle="--", linewidth=1.5, label="60-Day MA")
-    ax.plot(close_prices.rolling(120).mean(), color="#2ca02c", linestyle=":", linewidth=1.5, label="120-Day MA")
-    ax.set_title(f"{selected_company} Stock Price Analysis", fontsize=14)
-    ax.legend()
-    ax.grid(alpha=0.3)
-    st.pyplot(fig)
+ax1.plot(close, color="#880808", lw=1.8, label="Close")
+ax1.plot(close.rolling(20).mean(), color="#FF9500", lw=1.2, ls="--", label="MA20")
+ax1.plot(close.rolling(60).mean(), color="#007AFF", lw=1.4, ls="--", label="MA60")
+ax1.plot(close.rolling(120).mean(), color="#34C759", lw=1.2, ls=":", label="MA120")
+ax1.legend()
+ax1.grid(alpha=0.25)
 
-with col2:
-    st.subheader("📊 Key Metrics")
-    st.metric("Current Price", f"{current_price:.2f} CNY")
-    st.metric("Trend", trend)
-    st.metric("60-Day MA", f"{ma60:.2f} CNY")
-    st.metric("Valuation", valuation)
-    st.metric("Price vs. 60-Day MA", f"{deviation:.1%}")
+ax2.bar(vol.index, vol, color="#555", alpha=0.7)
+ax2.set_title("Trading Volume", fontsize=10)
+
+plt.tight_layout()
+st.pyplot(fig)
 
 # --------------------------
-# 专业投资建议（优化版）
+# Metrics
 # --------------------------
 st.divider()
-st.subheader("🧾 Professional Investment Recommendation")
+c1, c2, c3, c4 = st.columns(4)
+with c1: st.metric("Current Price", f"{current:.2f}")
+with c2: st.metric("Trend", trend)
+with c3: st.metric("Valuation", val)
+with c4: st.metric("Deviation to MA60", f"{dev:.1%}")
 
-rec = ""
-if trend in ["Strong Uptrend", "Moderate Uptrend"] and valuation in ["Fairly Valued", "Modestly Undervalued"]:
-    rec = """
-    **Bullish Outlook**: The stock exhibits strong momentum with a healthy price structure. 
-    **Recommendation**: Consider initiating or adding to positions on pullbacks to the 20-day moving average.
+# --------------------------
+# LONG & DETAILED INVESTMENT COMMENTARY
+# --------------------------
+st.divider()
+st.subheader("🧾 Comprehensive Investment Analysis & Recommendation")
+
+comment = ""
+
+if trend == "Strong Uptrend" and val in ["Fairly Valued", "Slightly Undervalued"]:
+    comment = f"""
+**Overall View**:  
+{selected} is in a **sustained strong uptrend** supported by a healthy moving average structure (MA20 above MA60, MA60 above MA120). The stock is relatively valued at present, with no extreme overheating.
+
+**Technical Situation**:  
+Price is steadily trending higher with controlled volatility. Volume patterns show accumulation during pullbacks, indicating institutional interest. The current deviation from the 60-day MA is {dev:.1%}, which is moderate and not excessive.
+
+**Fundamental Logic (Simulated)**:  
+Baijiu industry remains resilient with stable consumption upgrades. Leading brands enjoy pricing power and margin stability.
+
+**Investment Strategy**:  
+• Use short-term pullbacks toward the 20-day or 60-day moving average as buying opportunities.  
+• Maintain a medium-term holding perspective.  
+• Set partial profit-taking targets near historical resistance zones.  
+• Avoid chasing intraday spikes; focus on structured entry points.
+
+**Risk Points**:  
+Short-term market sentiment shifts, sector rotation, and liquidity tightening could cause temporary pullbacks.
     """
-elif trend in ["Strong Uptrend", "Moderate Uptrend"] and valuation in ["Modestly Overvalued", "Significantly Overvalued"]:
-    rec = """
-    **Cautious Bullish**: While the trend is positive, the stock appears extended. 
-    **Recommendation**: Hold existing positions but avoid new entries. Consider partial profit-taking.
+
+elif trend == "Strong Uptrend" and val in ["Slightly Overvalued", "Significantly Overvalued"]:
+    comment = f"""
+**Overall View**:  
+{selected} remains in a clear uptrend but has moved into **overvalued territory** relative to its medium-term average. The momentum is still positive but becoming extended.
+
+**Technical Situation**:  
+Price has deviated {dev:.1%} from the 60-day MA, which suggests short-term overbought conditions. Volume may start to show divergence on new highs.
+
+**Investment Strategy**:  
+• Hold core positions but avoid adding new exposure at current levels.  
+• Consider trimming positions into strength to lock in profits.  
+• Wait for a retracement of 5%–10% before reconsidering additions.  
+| Strictly avoid chasing prices at current valuation.
+
+**Risk Points**:  
+High valuation amplifies downside risk during market corrections. A trend reversal could lead to relatively deep adjustments.
     """
-elif trend == "Sideways/Weak" and valuation in ["Modestly Undervalued", "Significantly Undervalued"]:
-    rec = """
-    **Accumulation Zone**: The stock is consolidating at potentially attractive levels. 
-    **Recommendation**: Monitor closely for a breakout signal before committing capital.
+
+elif "Sideways" in trend and val in ["Slightly Undervalued", "Significantly Undervalued"]:
+    comment = f"""
+**Overall View**:  
+{selected} is in a **consolidation phase** with low volatility and appears undervalued relative to its medium-term trend. The stock is building a bottom structure.
+
+**Technical Situation**:  
+Price is trading below the 60-day MA with a deviation of {dev:.1%}, indicating a potential contrarian opportunity if support holds. Volume is light, typical of accumulation phases.
+
+**Investment Strategy**:  
+• Use this range to gradually build positions in tranches.  
+| Focus on downside protection rather than quick gains.  
+• Watch for a breakout above the range resistance with volume confirmation.  
+• Patience is required; sideways action can last for weeks.
+
+**Risk Points**:  
+A break below support could trigger further stop-loss selling. Industry headwinds may delay a trend recovery.
     """
+
+elif "Downtrend" in trend or (trend == "Sideways" and val in ["Overvalued"]):
+    comment = f"""
+**Overall View**:  
+{selected} shows weak technical structure with either a clear downtrend or unfavorable valuation. The risk-reward ratio is currently unattractive.
+
+**Technical Situation**:  
+Moving averages are aligned negatively, and price action lacks sustained buying pressure. Deviation from the medium-term average does not yet support a contrarian case.
+
+**Investment Strategy**:  
+• Reduce or avoid positions for the time being.  
+• Do not attempt to “buy the dip” without clear stabilization signals.  
+• Wait for a confirmed trend reversal (e.g., higher lows, moving average crossover).  
+• Shift focus to better-structured opportunities in the same sector.
+
+**Risk Points**:  
+Continued trend erosion, sentiment deterioration, and broader market volatility can extend downside.
+    """
+
 else:
-    rec = """
-    **Bearish Caution**: The technical setup suggests caution. 
-    **Recommendation**: Reduce exposure or remain on the sidelines until the trend improves.
-    """
+    comment = "The stock is in a balanced state with no strong directional signal. Maintain a neutral view and observe further price action."
 
-if "Bullish" in rec:
-    st.success(rec)
-elif "Cautious" in rec or "Accumulation" in rec:
-    st.info(rec)
-else:
-    st.warning(rec)
+st.markdown(comment)
 
-st.caption("Disclaimer: This analysis is for educational purposes only and does not constitute financial advice.")
+st.caption("Disclaimer: For educational and demonstration purposes only. Not investment advice.")
