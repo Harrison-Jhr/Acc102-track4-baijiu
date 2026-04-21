@@ -363,6 +363,34 @@ if not compare_mode:
 """)
     elif tr > -5:
         st.markdown("""
+# --------------------------
+# Professional Analysis & Strategic Recommendations
+# --------------------------
+st.divider()
+st.subheader("📄 Professional Analysis & Strategic Recommendations")
+
+if not compare_mode:
+    tr = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    av = df1["volatility"].mean()
+    max_dd = df1["drawdown"].min() * 100
+
+    st.markdown(f"""
+### 1. Performance Review: {stock1} (2022–2026)
+- **Total Return**: {tr:.1f}%
+- **Avg Volatility**: {av:.2f}
+- **Max Drawdown**: {max_dd:.1f}%
+- **Trend**: {'Sustained Uptrend' if tr > 5 else 'Range-Bound' if tr > -5 else 'Weak Downtrend'}
+""")
+
+    if tr > 5:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Momentum**: The stock maintains a positive trajectory, supported by brand fundamentals and sector tailwinds.
+- **Entry Strategy**: Core positions can be established during pullbacks to moving average support levels.
+- **Risk Considerations**: Monitor macro liquidity and sector rotation risks.
+""")
+    elif tr > -5:
+        st.markdown("""
 ### 2. Strategic Outlook
 - **Trend**: The stock is consolidating in a range, lacking clear near-term catalysts.
 - **Positioning**: Adopt a "wait-and-see" approach, awaiting confirmed breakout/breakdown signals.
