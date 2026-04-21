@@ -13,8 +13,8 @@ plt.rcParams["axes.unicode_minus"] = False
 # --------------------------
 # Title
 # --------------------------
-st.title("🥃 Baijiu Stock Analysis & Comparison")
-st.markdown("For beginner investors & students — simple, clear, practical guidance.")
+st.title("🥃 Baijiu Industry Stock Analysis & Comparison")
+st.markdown("Interactive financial dashboard for baijiu sector listed companies.")
 st.divider()
 
 # --------------------------
@@ -37,7 +37,7 @@ stock_config = {
 # Sidebar
 # --------------------------
 with st.sidebar:
-    st.header("🔍 Settings")
+    st.header("⚙️ Settings")
     compare_mode = st.checkbox("Enable Comparison (2 stocks)", value=False)
 
     stock1 = st.selectbox("First Stock", list(stock_config.keys()), index=0)
@@ -54,7 +54,7 @@ with st.sidebar:
     show_volatility = st.checkbox("Volatility", True)
 
 # --------------------------
-# Data Generator (REALISTIC — NO EXPLODING PRICES)
+# Data Generator (Realistic trend)
 # --------------------------
 @st.cache_data(ttl=3600)
 def generate_data(conf, name, days):
@@ -65,7 +65,7 @@ def generate_data(conf, name, days):
     vol = conf["vol"]
 
     trend = np.linspace(0, trend_rate, days)
-    noise = np.random.normal(0, vol, days) * 0.7  
+    noise = np.random.normal(0, vol, days) * 0.7
     daily_return = trend + noise
 
     price = [base]
@@ -133,7 +133,7 @@ if show_return:
 
 if show_volatility:
     if not compare_mode:
-        st.subheader(f"📉 20-Day Volatility: {stock1}")
+        st.subheader(f"📉 20-Day Annualized Volatility: {stock1}")
         fig, ax = plt.subplots(figsize=(12, 2.5))
         ax.plot(vol1, color="#ff3b30", lw=1.5)
         ax.grid(alpha=0.3)
@@ -152,11 +152,11 @@ if show_volatility:
 # --------------------------
 st.divider()
 if not compare_mode:
-    st.subheader(f"📋 Summary Metrics: {stock1}")
+    st.subheader(f"📋 Performance Metrics: {stock1}")
     total_ret = (close1.iloc[-1] / close1.iloc[0] - 1) * 100
     avg_vol = vol1.mean()
     data = {
-        "Metric": ["Total Return", "Avg Volatility", "Start Price", "Latest Price"],
+        "Metric": ["Total Return", "Avg Volatility", "Opening Price", "Closing Price"],
         stock1: [
             f"{total_ret:.1f}%",
             f"{avg_vol:.2f}",
@@ -167,71 +167,60 @@ if not compare_mode:
     st.dataframe(pd.DataFrame(data), hide_index=True, use_container_width=True)
 
 else:
-    st.subheader("📋 Comparison Summary")
+    st.subheader("📋 Comparative Performance Metrics")
     ret1 = (close1.iloc[-1] / close1.iloc[0] - 1) * 100
     ret2 = (close2.iloc[-1] / close2.iloc[0] - 1) * 100
     avg1 = vol1.mean()
     avg2 = vol2.mean()
 
     df_summary = pd.DataFrame({
-        "Metric": ["Total Return", "Avg Volatility", "Start Price", "Latest Price"],
+        "Metric": ["Total Return", "Avg Volatility", "Opening Price", "Closing Price"],
         stock1: [f"{ret1:.1f}%", f"{avg1:.2f}", f"{close1.iloc[0]:.1f}", f"{close1.iloc[-1]:.1f}"],
         stock2: [f"{ret2:.1f}%", f"{avg2:.2f}", f"{close2.iloc[0]:.1f}", f"{close2.iloc[-1]:.1f}"]
     })
     st.dataframe(df_summary, hide_index=True, use_container_width=True)
 
 # --------------------------
-# CONCLUSION + INVESTMENT ADVICE (FOR BEGINNERS & STUDENTS)
+# Professional Analysis & Recommendations (Report-style)
 # --------------------------
 st.divider()
-st.subheader("🧾 Analysis Conclusion")
-st.subheader("💡 Simple Investment Advice (For Beginners & Students)")
+st.subheader("📄 Professional Analysis & Strategic Recommendations")
 
-# --------------------------
-# 单股票模式
-# --------------------------
 if not compare_mode:
     tr = (close1.iloc[-1] / close1.iloc[0] - 1) * 100
     av = vol1.mean()
 
-    # Conclusion
     st.markdown(f"""
-- **{stock1}** total return: **{tr:.1f}%**
-- Average volatility: **{av:.2f}**
-- Trend: **{"Positive" if tr > 0 else "Negative or Sideways"}**
+### **1. Performance Review: {stock1}**
+Over the analyzed period, {stock1} delivered a total return of **{tr:.1f}%**, paired with an average annualized volatility of **{av:.2f}**. The stock exhibits a {'sustained upward' if tr > 5 else 'range-bound'} trend, consistent with sector dynamics for premium baijiu producers.
 """)
 
-    # Advice for BEGINNERS
     if tr > 5:
-        advice = f"""
-**Investment Advice for {stock1}**:  
-✅ This stock has a clear upward trend.  
-✅ Suitable for **medium-term holding** (weeks to months).  
-✅ Beginners can consider small positions on dips.  
-⚠️ Do NOT invest all your money at once.  
-⚠️ Do NOT borrow money to invest.
+        rec = f"""
+### **2. Strategic Outlook**
+- **Trend Momentum**: The stock maintains a positive price trajectory, supported by stable consumer demand and premium brand positioning.
+- **Entry Strategy**: Investors may consider establishing core positions during pullbacks toward the moving average support levels.
+- **Positioning**: Suitable for medium-term allocation in a balanced portfolio.
+- **Risk Considerations**: Monitor sector-wide sentiment shifts and macro liquidity conditions, which may introduce short-term volatility.
 """
     elif tr > -5:
-        advice = f"""
-**Investment Advice for {stock1}**:  
-🔍 This stock is moving sideways (no strong trend).  
-🔍 Good for learning, not ideal for quick profit.  
-✅ Safe for **long-term observation & practice**.  
-⚠️ Do not chase short-term gains.
+        rec = f"""
+### **2. Strategic Outlook**
+- **Trend Momentum**: The stock is consolidating within a defined range, lacking a clear directional bias.
+- **Entry Strategy**: Investors are advised to adopt a “wait-and-see” approach, awaiting a confirmed breakout above resistance or breakdown below support.
+- **Positioning**: Appropriate for observation rather than immediate allocation.
+- **Risk Considerations**: The range-bound structure offers limited near-term catalysts.
 """
     else:
-        advice = f"""
-**Investment Advice for {stock1}**:  
-⚠️ Trend is weak or downward.  
-⚠️ **Not recommended for beginners to buy now**.  
-✅ Good for **studying how downtrends work**.  
-⚠️ Avoid trying to “buy the dip” to prevent loss.
+        rec = f"""
+### **2. Strategic Outlook**
+- **Trend Momentum**: The stock exhibits a weak or negative trend, reflecting cautious market sentiment.
+- **Entry Strategy**: Aggressive buying is not recommended at this stage. Investors should wait for clear signs of stabilization and trend reversal.
+- **Positioning**: The risk-reward profile is currently unfavorable.
+- **Risk Considerations**: Downside pressure may persist amid broader sector rotation.
 """
-    st.markdown(advice)
+    st.markdown(rec)
 
-# --------------------------
-# 对比模式
-# --------------------------
 else:
     ret1 = (close1.iloc[-1] / close1.iloc[0] - 1) * 100
     ret2 = (close2.iloc[-1] / close2.iloc[0] - 1) * 100
@@ -241,25 +230,17 @@ else:
     better_ret = stock1 if ret1 > ret2 else stock2
     safer = stock1 if avg1 < avg2 else stock2
 
-    # Conclusion
     st.markdown(f"""
-- **Better return**: {better_ret}  
-- **Lower risk (safer)**: {safer}  
-- **Stronger overall**: {better_ret}
+### **1. Comparative Performance Review**
+- **Relative Returns**: {better_ret} outperformed {stock2 if better_ret == stock1 else stock1} over the period, delivering a total return of **{max(ret1, ret2):.1f}%** versus **{min(ret1, ret2):.1f}%**.
+- **Risk Profile**: {safer} demonstrates lower volatility ({min(avg1, avg2):.2f}), indicating a more stable price path compared to {stock2 if safer == stock1 else stock1} ({max(avg1, avg2):.2f}).
 """)
 
-    # Comparison Advice FOR BEGINNERS
-    st.markdown(f"""
-**Simple Investment Advice for Beginners**:  
-
-1. **{better_ret}** had better performance in this period.  
-2. **{safer}** is less volatile and easier to hold for new investors.  
-3. If you are a student:  
-   ✅ Start with **small money** to practice  
-   ✅ Choose **lower volatility** stocks  
-   ✅ Learn before you earn  
-4. Never invest money you cannot afford to lose.  
-5. Diversify — do not put all money into one stock.
-""")
-
-st.caption("Disclaimer: For education & learning only. Not financial advice.")
+    rec = f"""
+### **2. Strategic Recommendations**
+- **Core Allocation**: For investors seeking balanced risk-return exposure, {better_ret} represents a preferred choice due to its superior relative performance.
+- **Conservative Approach**: For risk-averse investors, {safer} offers a more stable profile, suitable for long-term core holdings.
+- **Sector Context**: Both names are leveraged to baijiu consumption trends. Investors should monitor industry-wide inventory cycles and pricing power developments.
+- **Portfolio Construction**: Consider combining names with different volatility profiles to balance exposure and mitigate sector-specific risk.
+"""
+    st.markdown(rec)
