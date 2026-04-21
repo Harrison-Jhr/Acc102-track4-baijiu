@@ -364,7 +364,7 @@ if not compare_mode:
     elif tr > -5:
         st.markdown("""
 # --------------------------
-# Professional Analysis & Strategic Recommendations (FINAL FIXED)
+# Professional Analysis & Strategic Recommendations (FINAL SAFE VERSION)
 # --------------------------
 st.divider()
 st.subheader("📄 Professional Analysis & Strategic Recommendations")
@@ -375,11 +375,15 @@ if not compare_mode:
     av = df1["volatility"].mean()
     max_dd = df1["drawdown"].min() * 100
 
-    # 修复的 f-string：使用双花括号 {{来表示输出一个花括号，消除歧义
+    # 先把格式化的变量单独算好，避免在 f-string 里写复杂格式
+    tr_str = f"{tr:.1f}%"
+    av_str = f"{av:.2f}"
+    max_dd_str = f"{max_dd:.1f}%"
+
     st.markdown(f"""
 ### Investment Thesis: {stock1} (2022–2026)
-{stock1} has delivered **{tr:.1f}%** cumulative return over the period, with annualized volatility of **{av:.2f}** 
-and maximum drawdown of **{max_dd:.1f}%**. 
+{stock1} has delivered **{tr_str}** cumulative return over the period, with annualized volatility of **{av_str}** 
+and maximum drawdown of **{max_dd_str}**.
 
 This performance trajectory is contextualized within the broader baijiu sector rotation:
 - **2022–2023**: Sector-wide de-stocking cycle weighed on sentiment.
@@ -393,12 +397,12 @@ This performance trajectory is contextualized within the broader baijiu sector r
 
 ### Institutional Execution Guidance
 - **Long-Term Accumulation**: Establish core positions during 52-week low pullbacks, supported by consistent free cash flow generation.
-- **Risk Management**: Implement a stop-loss protocol at 1.2x the observed maximum drawdown ({max_dd*1.2:.1f}%) to mitigate downside exposure during macro volatility.
+- **Risk Management**: Implement a stop-loss protocol at 1.2x the observed maximum drawdown to mitigate downside exposure during macro volatility.
 - **Catalyst Monitoring**: Track quarterly channel inventory levels (target < 1.2 months of sales) and high-end product mix expansion.
 """)
 
 else:
-    # 对比模式下的修复代码
+    # 对比模式下的安全写法
     tr1 = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
     tr2 = (df2["close"].iloc[-1] / df2["close"].iloc[0] - 1) * 100
     vol1 = df1["volatility"].mean()
@@ -406,16 +410,23 @@ else:
     dd1 = df1["drawdown"].min() * 100
     dd2 = df2["drawdown"].min() * 100
 
+    # 单独格式化，避免在 f-string 里写 .1f 这种格式
+    tr1_str = f"{tr1:.1f}%"
+    tr2_str = f"{tr2:.1f}%"
+    vol1_str = f"{vol1:.2f}"
+    vol2_str = f"{vol2:.2f}"
+    diff_str = f"{abs(tr1 - tr2):.1f}%"
+
     winner = stock1 if tr1 > tr2 else stock2
     safer_stock = stock1 if vol1 < vol2 else stock2
 
     st.markdown(f"""
 ### Comparative Investment Thesis: {stock1} vs {stock2}
-Over the 2022–2026 horizon, **{winner}** generated superior absolute returns ({max(tr1, tr2):.1f}% vs {min(tr1, tr2):.1f}%) 
+Over the 2022–2026 horizon, **{winner}** generated superior absolute returns ({tr1_str} vs {tr2_str}) 
 driven by structural advantages in brand equity and distribution efficiency.
 
-- **Return Differential**: {abs(tr1 - tr2):.1f} percentage points
-- **Volatility Leader**: {safer_stock} ({min(vol1, vol2):.2f}) exhibits more stable price dynamics
+- **Return Differential**: {diff_str}
+- **Volatility Leader**: {safer_stock} ({min(vol1_str, vol2_str)}) exhibits more stable price dynamics
 - **Drawdown Management**: {stock1 if dd1 > dd2 else stock2}
 
 ### Institutional Portfolio Strategy
