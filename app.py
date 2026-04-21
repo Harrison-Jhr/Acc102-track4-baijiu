@@ -54,11 +54,12 @@ with st.sidebar:
     show_volatility = st.checkbox("Volatility", True)
 
 # --------------------------
-# Data Generator
+# Data Generator (Fixed Seed)
 # --------------------------
 @st.cache_data(ttl=3600)
-def generate_data(conf, days):
-    np.random.seed(42 + hash(conf) % 1000)
+def generate_data(conf, name, days):
+    # 修复：用公司名作为种子，而不是字典
+    np.random.seed(42 + hash(name) % 1000)
     trend = np.linspace(0, conf["trend"], days)
     cycle = 0.06 * np.sin(np.linspace(0, 8 * np.pi, days))
     noise = np.random.normal(0, conf["vol"], days)
@@ -67,8 +68,8 @@ def generate_data(conf, days):
     idx = pd.date_range(end=pd.Timestamp.now(), periods=days)
     return pd.DataFrame({"Close": price}, index=idx)
 
-df1 = generate_data(stock_config[stock1], days)
-df2 = generate_data(stock_config[stock2], days) if compare_mode else None
+df1 = generate_data(stock_config[stock1], stock1, days)
+df2 = generate_data(stock_config[stock2], stock2, days) if compare_mode else None
 
 # --------------------------
 # Indicators
