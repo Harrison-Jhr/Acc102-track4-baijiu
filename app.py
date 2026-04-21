@@ -334,48 +334,16 @@ else:
     })
 
 st.dataframe(df_summary, hide_index=True, use_container_width=True)
-
 # --------------------------
-# Professional Analysis & Recommendations
-# --------------------------
-st.divider()
-st.subheader("📄 Professional Analysis & Strategic Recommendations")
-
-if not compare_mode:
-    tr = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
-    av = df1["volatility"].mean()
-    max_dd = df1["drawdown"].min() * 100
-
-    st.markdown(f"""
-### 1. Performance Review: {stock1} (2022–2026)
-- **Total Return**: {tr:.1f}%
-- **Avg Volatility**: {av:.2f}
-- **Max Drawdown**: {max_dd:.1f}%
-- **Trend**: {'Sustained Uptrend' if tr > 5 else 'Range-Bound' if tr > -5 else 'Weak Downtrend'}
-""")
-
-    if tr > 5:
-        st.markdown("""
-### 2. Strategic Outlook
-- **Momentum**: The stock maintains a positive trajectory, supported by brand fundamentals and sector tailwinds.
-- **Entry Strategy**: Core positions can be established during pullbacks to moving average support levels.
-- **Risk Considerations**: Monitor macro liquidity and sector rotation risks.
-""")
-    elif tr > -5:
-        st.markdown("""
-# --------------------------
-# Professional Analysis & Strategic Recommendations (SIMPLEST VERSION)
+# Professional Analysis & Strategic Recommendations (SAFE)
 # --------------------------
 st.divider()
 st.subheader("Professional Analysis & Strategic Recommendations")
 
+# 单股模式
 if not compare_mode:
-    st.markdown("### Investment Thesis")
-    st.markdown("This baijiu stock has demonstrated resilience through the market cycle.")
-    st.markdown("### Strategic Positioning")
-    st.markdown("It is suitable for long-term holding in a consumer portfolio.")
+    st.write("The selected baijiu stock shows stable performance over the period.")
+
+# 对比模式
 else:
-    st.markdown("### Comparative Performance Thesis")
-    st.markdown("One stock shows stronger momentum, the other offers stability.")
-    st.markdown("### Portfolio Strategy")
-    st.markdown("Prioritize based on your risk preference.")
+    st.write("One stock has better returns, the other is more stable.")
