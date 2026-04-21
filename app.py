@@ -334,16 +334,64 @@ else:
     })
 
 st.dataframe(df_summary, hide_index=True, use_container_width=True)
+
 # --------------------------
-# Professional Analysis & Strategic Recommendations (SAFE)
+# Professional Analysis & Recommendations
 # --------------------------
 st.divider()
-st.subheader("Professional Analysis & Strategic Recommendations")
+st.subheader("📄 Professional Analysis & Strategic Recommendations")
 
-# 单股模式
 if not compare_mode:
-    st.write("The selected baijiu stock shows stable performance over the period.")
+    tr = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    av = df1["volatility"].mean()
+    max_dd = df1["drawdown"].min() * 100
 
-# 对比模式
+    st.markdown(f"""
+### 1. Performance Review: {stock1} (2022–2026)
+- **Total Return**: {tr:.1f}%
+- **Avg Volatility**: {av:.2f}
+- **Max Drawdown**: {max_dd:.1f}%
+- **Trend**: {'Sustained Uptrend' if tr > 5 else 'Range-Bound' if tr > -5 else 'Weak Downtrend'}
+""")
+
+    if tr > 5:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Momentum**: The stock maintains a positive trajectory, supported by brand fundamentals and sector tailwinds.
+- **Entry Strategy**: Core positions can be established during pullbacks to moving average support levels.
+- **Risk Considerations**: Monitor macro liquidity and sector rotation risks.
+""")
+    elif tr > -5:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Trend**: The stock is consolidating in a range, lacking clear near-term catalysts.
+- **Positioning**: Adopt a "wait-and-see" approach, awaiting confirmed breakout/breakdown signals.
+""")
+    else:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Trend**: The stock exhibits weak momentum, reflecting cautious market sentiment.
+- **Action**: Aggressive buying is not recommended. Wait for stabilization and reversal signals.
+""")
+
 else:
-    st.write("One stock has better returns, the other is more stable.")
+    tr1 = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    tr2 = (df2["close"].iloc[-1] / df2["close"].iloc[0] - 1) * 100
+    av1 = df1["volatility"].mean()
+    av2 = df2["volatility"].mean()
+
+    better_ret = stock1 if tr1 > tr2 else stock2
+    safer = stock1 if av1 < av2 else stock2
+
+    st.markdown(f"""
+### 1. Comparative Performance Review
+- **Relative Returns**: {better_ret} outperformed {stock2 if better_ret == stock1 else stock1} ({max(tr1, tr2):.1f}% vs {min(tr1, tr2):.1f}%).
+- **Risk Profile**: {safer} exhibits lower volatility ({min(av1, av2):.2f}), indicating a more stable price path.
+""")
+
+    st.markdown(f"""
+### 2. Strategic Recommendations
+- **Growth-Focused**: {better_ret} is preferred for investors seeking capital appreciation.
+- **Risk-Averse**: {safer} is more suitable for investors prioritizing stability.
+- **Sector Context**: Both names benefit from baijiu consumption trends. Monitor inventory cycles and pricing power developments.
+""")
