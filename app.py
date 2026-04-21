@@ -364,26 +364,26 @@ if not compare_mode:
     elif tr > -5:
         st.markdown("""
 # --------------------------
-# Professional Analysis & Strategic Recommendations (FINAL NO-VARIABLE VERSION)
+# Professional Analysis & Strategic Recommendations (CLEANEST VERSION)
 # --------------------------
 st.divider()
-st.subheader("📄 Professional Analysis & Strategic Recommendations")
+st.subheader("Professional Analysis & Strategic Recommendations")
 
 if not compare_mode:
     st.markdown("""
 ### Investment Thesis
-This baijiu stock has demonstrated resilience through the 2022–2026 market cycle. 
-Its performance reflects the broader sector's recovery from inventory adjustments, driven by stable high-end consumption and brand loyalty.
+This baijiu stock has demonstrated resilience through the 2022-2026 market cycle. 
+The performance trajectory reflects the sector's recovery from inventory adjustments, supported by stable high-end consumption and strong brand loyalty.
 
 ### Strategic Positioning
-- **Long-term Allocation**: Suitable for inclusion in a core consumer portfolio, supported by predictable cash flow.
-- **Risk Profile**: Moderate volatility with manageable downside risk during market corrections.
-- **Competitive Edge**: Strong brand equity and pricing power act as key moats against industry competition.
+- Long-term Allocation: Suitable for inclusion in a core consumer portfolio, supported by predictable cash flow.
+- Risk Profile: Moderate volatility with manageable downside risk during market corrections.
+- Competitive Edge: Strong brand equity and pricing power are key moats against industry competition.
 
 ### Institutional Guidance
-- **Accumulation Strategy**: Build positions during market pullbacks, focusing on periods of sector-wide sentiment weakness.
-- **Risk Management**: Monitor channel inventory levels and macro consumption trends to avoid timing risk.
-- **Key Catalysts**: Watch for premium product launches and pricing adjustments that can drive margin expansion.
+- Accumulation Strategy: Build positions during market pullbacks, focusing on periods of sector-wide sentiment weakness.
+- Risk Management: Monitor channel inventory levels and macro consumption trends to avoid timing risk.
+- Key Catalysts: Watch for premium product launches and pricing adjustments that can drive margin expansion.
 """)
 
 else:
@@ -393,9 +393,9 @@ When comparing the two selected baijiu stocks, one exhibits stronger absolute re
 This divergence stems from differences in tier positioning, product mix, and regional market penetration.
 
 ### Portfolio Strategy
-- **Growth Mandate**: The higher-performing stock is preferred for investors seeking capital appreciation, benefiting from sector consolidation.
-- **Defensive Mandate**: The more stable stock serves as a core holding, offering lower volatility and reliable dividend-like returns.
-- **Sector Context**: Leading baijiu brands continue to capture market share, driven by consumer preference for established and premium labels.
+- Growth Mandate: The higher-performing stock is preferred for investors seeking capital appreciation, benefiting from sector consolidation.
+- Defensive Mandate: The more stable stock serves as a core holding, offering lower volatility and reliable cash flow.
+- Sector Context: Leading baijiu brands continue to capture market share driven by consumer preference for established and premium labels.
 
 ### Key Monitoring Points
 Focus on inventory normalization, high-end sales growth, and macroeconomic recovery signals to adjust positioning.
