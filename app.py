@@ -366,6 +366,46 @@ if not compare_mode:
 # --------------------------
 # Professional Analysis & Strategic Recommendations
 # --------------------------
+# --------------------------
+# Performance Metrics Table
+# --------------------------
+st.divider()
+st.subheader("📋 Performance Metrics")
+
+def get_metrics(df):
+    total_ret = (df["close"].iloc[-1] / df["close"].iloc[0] - 1) * 100
+    avg_vol = df["vol"].mean()
+    avg_rsi = df["rsi"].mean()
+    avg_volatility = df["volatility"].mean()
+    max_drawdown = df["drawdown"].min() * 100
+    return [
+        f"{total_ret:.1f}%",
+        f"{avg_vol:.0f}",
+        f"{avg_rsi:.1f}",
+        f"{avg_volatility:.2f}",
+        f"{max_drawdown:.1f}%"
+    ]
+
+if not compare_mode:
+    metrics = get_metrics(df1)
+    df_summary = pd.DataFrame({
+        "Metric": ["Total Return", "Avg Volume", "Avg RSI", "Avg Volatility", "Max Drawdown"],
+        stock1: metrics
+    })
+else:
+    m1 = get_metrics(df1)
+    m2 = get_metrics(df2)
+    df_summary = pd.DataFrame({
+        "Metric": ["Total Return", "Avg Volume", "Avg RSI", "Avg Volatility", "Max Drawdown"],
+        stock1: m1,
+        stock2: m2
+    })
+
+st.dataframe(df_summary, hide_index=True, use_container_width=True)
+
+# --------------------------
+# Professional Analysis & Strategic Recommendations (Fixed)
+# --------------------------
 st.divider()
 st.subheader("📄 Professional Analysis & Strategic Recommendations")
 
@@ -375,31 +415,20 @@ if not compare_mode:
     max_dd = df1["drawdown"].min() * 100
 
     st.markdown(f"""
-### 1. Performance Review: {stock1} (2022–2026)
-- **Total Return**: {tr:.1f}%
-- **Avg Volatility**: {av:.2f}
-- **Max Drawdown**: {max_dd:.1f}%
-- **Trend**: {'Sustained Uptrend' if tr > 5 else 'Range-Bound' if tr > -5 else 'Weak Downtrend'}
-""")
+### Investment Conclusion: {stock1} (2022–2026)
+{stock1} has delivered **{tr:.1f}%** cumulative return over the period, with annualized volatility of {av:.2f} 
+and maximum drawdown of {max_dd:.1f}%. The stock’s trajectory reflects the structural shifts in the baijiu sector, 
+including industry de-stocking, high-end resilience, and market share concentration toward leading brands.
 
-    if tr > 5:
-        st.markdown("""
-### 2. Strategic Outlook
-- **Momentum**: The stock maintains a positive trajectory, supported by brand fundamentals and sector tailwinds.
-- **Entry Strategy**: Core positions can be established during pullbacks to moving average support levels.
-- **Risk Considerations**: Monitor macro liquidity and sector rotation risks.
-""")
-    elif tr > -5:
-        st.markdown("""
-### 2. Strategic Outlook
-- **Trend**: The stock is consolidating in a range, lacking clear near-term catalysts.
-- **Positioning**: Adopt a "wait-and-see" approach, awaiting confirmed breakout/breakdown signals.
-""")
-    else:
-        st.markdown("""
-### 2. Strategic Outlook
-- **Trend**: The stock exhibits weak momentum, reflecting cautious market sentiment.
-- **Action**: Aggressive buying is not recommended. Wait for stabilization and reversal signals.
+### Strategic View
+- **Long-term allocation value**: {'High' if tr > 5 else 'Medium' if tr > -5 else 'Low'}  
+- **Risk profile**: {'Controlled' if av < 0.25 else 'Moderate' if av < 0.29 else 'Elevated'}  
+- **Sector positioning**: {stock1} remains {'a core industry leader' if stock1 in ['Kweichow Moutai', 'Wuliangye', 'Luzhou Laojiao'] else 'a strong regional or second-tier player'} with stable brand fundamentals.
+
+### Institutional-Grade Advice
+- For **long-only investors**: Use pullbacks as opportunities to accumulate, supported by consistent cash flow and pricing power.
+- For **risk-controlled portfolios**: Adequate for strategic positioning given low correlation to short-term market sentiment.
+- Key monitoring points: channel inventory, pricing power, high-end product sales ratio, and macro consumption recovery.
 """)
 
 else:
@@ -407,19 +436,29 @@ else:
     tr2 = (df2["close"].iloc[-1] / df2["close"].iloc[0] - 1) * 100
     av1 = df1["volatility"].mean()
     av2 = df2["volatility"].mean()
+    max_dd1 = df1["drawdown"].min() * 100
+    max_dd2 = df2["drawdown"].min() * 100
 
     better_ret = stock1 if tr1 > tr2 else stock2
     safer = stock1 if av1 < av2 else stock2
 
     st.markdown(f"""
-### 1. Comparative Performance Review
-- **Relative Returns**: {better_ret} outperformed {stock2 if better_ret == stock1 else stock1} ({max(tr1, tr2):.1f}% vs {min(tr1, tr2):.1f}%).
-- **Risk Profile**: {safer} exhibits lower volatility ({min(av1, av2):.2f}), indicating a more stable price path.
-""")
+### Comparative Investment Conclusion: {stock1} vs {stock2}
+From 2022 to 2026, **{better_ret}** delivered stronger absolute returns with better risk-adjusted performance. 
+The relative performance gap reflects differences in brand strength, product structure, and channel stability.
 
-    st.markdown(f"""
-### 2. Strategic Recommendations
-- **Growth-Focused**: {better_ret} is preferred for investors seeking capital appreciation.
-- **Risk-Averse**: {safer} is more suitable for investors prioritizing stability.
-- **Sector Context**: Both names benefit from baijiu consumption trends. Monitor inventory cycles and pricing power developments.
+- **Return differential**: {abs(tr1 - tr2):.1f}%  
+- **Lower volatility**: {safer}  
+- **Better drawdown control**: {stock1 if max_dd1 > max_dd2 else stock2}
+
+### Institutional Allocation Strategy
+- **Growth portfolios**: Overweight {better_ret} for stronger upside driven by industry-leading fundamentals.
+- **Defensive portfolios**: Prefer {safer} for improved stability during market volatility.
+- **Sector logic**: Baijiu industry remains in a consolidation phase; leading brands with pricing power and efficient channels will continue to gain share.
+
+### Key Catalysts to Watch
+- High-end product volume recovery
+- Channel inventory health
+- Pricing adjustment announcements
+- Macro consumer spending recovery
 """)
