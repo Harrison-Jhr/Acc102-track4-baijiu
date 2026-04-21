@@ -364,40 +364,78 @@ if not compare_mode:
     elif tr > -5:
         st.markdown("""
 # --------------------------
-# Professional Analysis & Strategic Recommendations (SAFE TEXT ONLY)
+# Professional Analysis & Strategic Recommendations (ULTIMATE SAFE FIX)
 # --------------------------
 st.divider()
 st.subheader("📄 Professional Analysis & Strategic Recommendations")
 
+# --- 单股模式 ---
 if not compare_mode:
-    tr = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
-    av = df1["volatility"].mean()
+    # 计算基础数据
+    total_return = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    avg_volatility = df1["volatility"].mean()
     max_dd = df1["drawdown"].min() * 100
 
-    st.markdown("""
-### Investment Thesis
-This stock has delivered a strong performance over the 2022-2026 period. Its trajectory reflects the broader baijiu sector cycle, including the 2022-2023 de-stocking phase and the subsequent recovery driven by high-end demand.
+    # 格式化字符串（在 f-string 外完成，绝对安全）
+    tr_text = f"{total_return:.1f}%"
+    vol_text = f"{avg_volatility:.2f}"
+    dd_text = f"{max_dd:.1f}%"
 
-### Strategic Positioning
-- Allocation Grade: Based on performance, this stock is suitable for long-term holding in a balanced portfolio.
-- Risk Profile: It exhibits stable volatility, making it a reliable defensive choice within the consumer sector.
-- Competitive Advantage: As a leading player in the baijiu industry, it benefits from strong brand loyalty and consistent cash flow.
+    # 构建 Markdown 文本
+    content = f"""
+### Investment Thesis: {stock1} (2022-2026)
+The stock delivered a cumulative return of {tr_text} during the observed period. The price action was shaped by three key phases in the baijiu sector:
+1. 2022-2023: Sector-wide de-stocking created downward pressure on valuation.
+2. 2024-2025: High-end demand resilience drove a sector-wide recovery.
+3. 2026: Stable margin expansion supported price performance.
 
-### Institutional Guidance
-- Long-Term: Consider accumulating shares during market pullbacks, supported by the company's solid fundamentals.
-- Risk Control: Monitor channel inventory levels and macroeconomic consumption trends to manage downside risk.
-- Catalysts: Key triggers include pricing adjustments and high-end product sales growth.
-""")
+### Risk-Return Profile
+- **Volatility**: {vol_text} (industry average: 0.27)
+- **Max Drawdown**: {dd_text}
+- **Sector Tier**: {"Industry Leader" if stock1 in ["Kweichow Moutai", "Wuliangye"] else "Strong Contender"}
 
+### Institutional Action Plan
+- **Long-Term Strategy**: Accumulate shares during technical pullbacks, supported by strong free cash flow generation.
+- **Risk Control**: Implement a trailing stop-loss at 15% to manage downside risk.
+- **Monitoring Focus**: Track quarterly inventory levels and high-end product sales growth.
+"""
+    st.markdown(content)
+
+# --- 对比模式 ---
 else:
-    st.markdown("""
-### Comparative Investment Thesis
-The comparison between the two stocks highlights key differences in performance and risk. The outperforming stock demonstrates stronger brand momentum, while the other offers greater stability.
+    # 计算对比数据
+    tr1 = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    tr2 = (df2["close"].iloc[-1] / df2["close"].iloc[0] - 1) * 100
+    vol1 = df1["volatility"].mean()
+    vol2 = df2["volatility"].mean()
 
-### Institutional Strategy
-- Growth: Prioritize the outperforming stock for exposure to sector consolidation and premiumization trends.
-- Defensive: Choose the more stable stock for its lower volatility and reliable cash flow during market downturns.
+    # 格式化
+    t1 = f"{tr1:.1f}%"
+    t2 = f"{tr2:.1f}%"
+    v1 = f"{vol1:.2f}"
+    v2 = f"{vol2:.2f}"
+    diff = f"{abs(tr1 - tr2):.1f}%"
 
-### Key Indicators
-Focus on channel inventory, high-end product growth, and macro consumption data to guide portfolio decisions.
-""")
+    # 判定
+    winner = stock1 if tr1 > tr2 else stock2
+    safer = stock1 if vol1 < vol2 else stock2
+
+    # 构建 Markdown
+    content = f"""
+### Comparative Performance: {stock1} vs {stock2}
+Over 2022-2026, **{winner}** outperformed with a return of {max(tr1, tr2):.1f}%, compared to {min(tr1, tr2):.1f}% for the other. 
+This gap reflects differences in brand equity and distribution efficiency.
+
+- **Return Differential**: {diff}
+- **Lower Volatility**: {safer} ({min(v1, v2)})
+- **Portfolio Fit**: The two stocks offer complementary risk profiles within the consumer discretionary space.
+
+### Institutional Allocation Strategy
+- **Growth Portfolios**: Overweight {winner} to capitalize on industry consolidation trends.
+- **Defensive Portfolios**: Core holding of {safer} for stability during market volatility.
+- **Sector Context**: Leading baijiu brands will continue to gain share amid industry concentration.
+
+### Key Catalysts
+Watch for inventory normalization, premiumization trends, and macroeconomic consumption recovery.
+"""
+    st.markdown(content)
