@@ -364,39 +364,18 @@ if not compare_mode:
     elif tr > -5:
         st.markdown("""
 # --------------------------
-# Professional Analysis & Strategic Recommendations (CLEANEST VERSION)
+# Professional Analysis & Strategic Recommendations (SIMPLEST VERSION)
 # --------------------------
 st.divider()
 st.subheader("Professional Analysis & Strategic Recommendations")
 
 if not compare_mode:
-    st.markdown("""
-### Investment Thesis
-This baijiu stock has demonstrated resilience through the 2022-2026 market cycle. 
-The performance trajectory reflects the sector's recovery from inventory adjustments, supported by stable high-end consumption and strong brand loyalty.
-
-### Strategic Positioning
-- Long-term Allocation: Suitable for inclusion in a core consumer portfolio, supported by predictable cash flow.
-- Risk Profile: Moderate volatility with manageable downside risk during market corrections.
-- Competitive Edge: Strong brand equity and pricing power are key moats against industry competition.
-
-### Institutional Guidance
-- Accumulation Strategy: Build positions during market pullbacks, focusing on periods of sector-wide sentiment weakness.
-- Risk Management: Monitor channel inventory levels and macro consumption trends to avoid timing risk.
-- Key Catalysts: Watch for premium product launches and pricing adjustments that can drive margin expansion.
-""")
-
+    st.markdown("### Investment Thesis")
+    st.markdown("This baijiu stock has demonstrated resilience through the market cycle.")
+    st.markdown("### Strategic Positioning")
+    st.markdown("It is suitable for long-term holding in a consumer portfolio.")
 else:
-    st.markdown("""
-### Comparative Performance Thesis
-When comparing the two selected baijiu stocks, one exhibits stronger absolute return momentum while the other offers superior stability. 
-This divergence stems from differences in tier positioning, product mix, and regional market penetration.
-
-### Portfolio Strategy
-- Growth Mandate: The higher-performing stock is preferred for investors seeking capital appreciation, benefiting from sector consolidation.
-- Defensive Mandate: The more stable stock serves as a core holding, offering lower volatility and reliable cash flow.
-- Sector Context: Leading baijiu brands continue to capture market share driven by consumer preference for established and premium labels.
-
-### Key Monitoring Points
-Focus on inventory normalization, high-end sales growth, and macroeconomic recovery signals to adjust positioning.
-""")
+    st.markdown("### Comparative Performance Thesis")
+    st.markdown("One stock shows stronger momentum, the other offers stability.")
+    st.markdown("### Portfolio Strategy")
+    st.markdown("Prioritize based on your risk preference.")
