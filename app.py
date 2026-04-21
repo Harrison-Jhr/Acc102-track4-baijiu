@@ -364,7 +364,7 @@ if not compare_mode:
     elif tr > -5:
         st.markdown("""
 # --------------------------
-# Professional Analysis & Strategic Recommendations (FINAL SAFE VERSION)
+# Professional Analysis & Strategic Recommendations (FINAL CLEAN VERSION)
 # --------------------------
 st.divider()
 st.subheader("📄 Professional Analysis & Strategic Recommendations")
@@ -375,19 +375,18 @@ if not compare_mode:
     av = df1["volatility"].mean()
     max_dd = df1["drawdown"].min() * 100
 
-    # 先把格式化的变量单独算好，避免在 f-string 里写复杂格式
+    # 格式化字符串，避免歧义
     tr_str = f"{tr:.1f}%"
     av_str = f"{av:.2f}"
     max_dd_str = f"{max_dd:.1f}%"
 
     st.markdown(f"""
-### Investment Thesis: {stock1} (2022–2026)
-{stock1} has delivered **{tr_str}** cumulative return over the period, with annualized volatility of **{av_str}** 
-and maximum drawdown of **{max_dd_str}**.
+### Investment Thesis: {stock1} (2022-2026)
+{stock1} has delivered **{tr_str}** cumulative return over the period, with annualized volatility of **{av_str}** and maximum drawdown of **{max_dd_str}**.
 
 This performance trajectory is contextualized within the broader baijiu sector rotation:
-- **2022–2023**: Sector-wide de-stocking cycle weighed on sentiment.
-- **2024–2025**: High-end resilience drove a sector recovery.
+- **2022-2023**: Sector-wide de-stocking cycle weighed on sentiment.
+- **2024-2025**: High-end resilience drove a sector recovery.
 - **2026 YTD**: Margin expansion stabilized share price performance.
 
 ### Strategic Positioning
@@ -410,7 +409,7 @@ else:
     dd1 = df1["drawdown"].min() * 100
     dd2 = df2["drawdown"].min() * 100
 
-    # 单独格式化，避免在 f-string 里写 .1f 这种格式
+    # 格式化字符串，避免歧义
     tr1_str = f"{tr1:.1f}%"
     tr2_str = f"{tr2:.1f}%"
     vol1_str = f"{vol1:.2f}"
@@ -422,8 +421,7 @@ else:
 
     st.markdown(f"""
 ### Comparative Investment Thesis: {stock1} vs {stock2}
-Over the 2022–2026 horizon, **{winner}** generated superior absolute returns ({tr1_str} vs {tr2_str}) 
-driven by structural advantages in brand equity and distribution efficiency.
+Over the 2022-2026 horizon, **{winner}** generated superior absolute returns ({tr1_str} vs {tr2_str}) driven by structural advantages in brand equity and distribution efficiency.
 
 - **Return Differential**: {diff_str}
 - **Volatility Leader**: {safer_stock} ({min(vol1_str, vol2_str)}) exhibits more stable price dynamics
@@ -432,15 +430,15 @@ driven by structural advantages in brand equity and distribution efficiency.
 ### Institutional Portfolio Strategy
 #### Growth-Focused Mandate
 - **Overweight**: {winner} for its exposure to industry consolidation trends and premiumization momentum.
-- **Position Size**: 8–11% of consumer discretionary allocation.
+- **Position Size**: 8-11% of consumer discretionary allocation.
 
 #### Defensive-Focused Mandate
 - **Core Hold**: {safer_stock} for its lower beta and stable cash flow during economic contractions.
-- **Position Size**: 5–7% of core equity holdings.
+- **Position Size**: 5-7% of core equity holdings.
 
-### Key Sector Indicators (2026–2027)
+### Key Sector Indicators (2026-2027)
 Monitor three high-leverage metrics to adjust positioning:
-1.  **Channel Inventory**: A critical leading indicator for pricing power—readings above 2 months signal near-term margin pressure.
+1.  **Channel Inventory**: A critical leading indicator for pricing power - readings above 2 months signal near-term margin pressure.
 2.  **High-End Volume Growth**: A key barometer for consumption upgrading trends (target: >10% YoY for leading brands).
 3.  **Macro Consumption Data**: Retail sales trends and disposable income metrics will directly impact demand for mid-to-high-end baijiu products.
 """)
