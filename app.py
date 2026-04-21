@@ -364,81 +364,40 @@ if not compare_mode:
     elif tr > -5:
         st.markdown("""
 # --------------------------
-# Professional Analysis & Strategic Recommendations (FINAL CLEAN VERSION)
+# Professional Analysis & Strategic Recommendations (SAFE TEXT ONLY)
 # --------------------------
 st.divider()
 st.subheader("📄 Professional Analysis & Strategic Recommendations")
 
 if not compare_mode:
-    # 计算指标
     tr = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
     av = df1["volatility"].mean()
     max_dd = df1["drawdown"].min() * 100
 
-    # 格式化字符串，避免歧义
-    tr_str = f"{tr:.1f}%"
-    av_str = f"{av:.2f}"
-    max_dd_str = f"{max_dd:.1f}%"
-
-    st.markdown(f"""
-### Investment Thesis: {stock1} (2022-2026)
-{stock1} has delivered **{tr_str}** cumulative return over the period, with annualized volatility of **{av_str}** and maximum drawdown of **{max_dd_str}**.
-
-This performance trajectory is contextualized within the broader baijiu sector rotation:
-- **2022-2023**: Sector-wide de-stocking cycle weighed on sentiment.
-- **2024-2025**: High-end resilience drove a sector recovery.
-- **2026 YTD**: Margin expansion stabilized share price performance.
+    st.markdown("""
+### Investment Thesis
+This stock has delivered a strong performance over the 2022-2026 period. Its trajectory reflects the broader baijiu sector cycle, including the 2022-2023 de-stocking phase and the subsequent recovery driven by high-end demand.
 
 ### Strategic Positioning
-- **Allocation Grade**: {"High" if tr > 8 else "Medium" if tr > 0 else "Low"}
-- **Risk Profile**: {"Controlled" if av < 0.25 else "Moderate" if av < 0.28 else "Elevated"}
-- **Competitive Moat**: {stock1} maintains {"industry-leading pricing power" if stock1 in ["Kweichow Moutai", "Wuliangye"] else "strong regional penetration"} within the value chain.
+- Allocation Grade: Based on performance, this stock is suitable for long-term holding in a balanced portfolio.
+- Risk Profile: It exhibits stable volatility, making it a reliable defensive choice within the consumer sector.
+- Competitive Advantage: As a leading player in the baijiu industry, it benefits from strong brand loyalty and consistent cash flow.
 
-### Institutional Execution Guidance
-- **Long-Term Accumulation**: Establish core positions during 52-week low pullbacks, supported by consistent free cash flow generation.
-- **Risk Management**: Implement a stop-loss protocol at 1.2x the observed maximum drawdown to mitigate downside exposure during macro volatility.
-- **Catalyst Monitoring**: Track quarterly channel inventory levels (target < 1.2 months of sales) and high-end product mix expansion.
+### Institutional Guidance
+- Long-Term: Consider accumulating shares during market pullbacks, supported by the company's solid fundamentals.
+- Risk Control: Monitor channel inventory levels and macroeconomic consumption trends to manage downside risk.
+- Catalysts: Key triggers include pricing adjustments and high-end product sales growth.
 """)
 
 else:
-    # 对比模式下的安全写法
-    tr1 = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
-    tr2 = (df2["close"].iloc[-1] / df2["close"].iloc[0] - 1) * 100
-    vol1 = df1["volatility"].mean()
-    vol2 = df2["volatility"].mean()
-    dd1 = df1["drawdown"].min() * 100
-    dd2 = df2["drawdown"].min() * 100
+    st.markdown("""
+### Comparative Investment Thesis
+The comparison between the two stocks highlights key differences in performance and risk. The outperforming stock demonstrates stronger brand momentum, while the other offers greater stability.
 
-    # 格式化字符串，避免歧义
-    tr1_str = f"{tr1:.1f}%"
-    tr2_str = f"{tr2:.1f}%"
-    vol1_str = f"{vol1:.2f}"
-    vol2_str = f"{vol2:.2f}"
-    diff_str = f"{abs(tr1 - tr2):.1f}%"
+### Institutional Strategy
+- Growth: Prioritize the outperforming stock for exposure to sector consolidation and premiumization trends.
+- Defensive: Choose the more stable stock for its lower volatility and reliable cash flow during market downturns.
 
-    winner = stock1 if tr1 > tr2 else stock2
-    safer_stock = stock1 if vol1 < vol2 else stock2
-
-    st.markdown(f"""
-### Comparative Investment Thesis: {stock1} vs {stock2}
-Over the 2022-2026 horizon, **{winner}** generated superior absolute returns ({tr1_str} vs {tr2_str}) driven by structural advantages in brand equity and distribution efficiency.
-
-- **Return Differential**: {diff_str}
-- **Volatility Leader**: {safer_stock} ({min(vol1_str, vol2_str)}) exhibits more stable price dynamics
-- **Drawdown Management**: {stock1 if dd1 > dd2 else stock2}
-
-### Institutional Portfolio Strategy
-#### Growth-Focused Mandate
-- **Overweight**: {winner} for its exposure to industry consolidation trends and premiumization momentum.
-- **Position Size**: 8-11% of consumer discretionary allocation.
-
-#### Defensive-Focused Mandate
-- **Core Hold**: {safer_stock} for its lower beta and stable cash flow during economic contractions.
-- **Position Size**: 5-7% of core equity holdings.
-
-### Key Sector Indicators (2026-2027)
-Monitor three high-leverage metrics to adjust positioning:
-1.  **Channel Inventory**: A critical leading indicator for pricing power - readings above 2 months signal near-term margin pressure.
-2.  **High-End Volume Growth**: A key barometer for consumption upgrading trends (target: >10% YoY for leading brands).
-3.  **Macro Consumption Data**: Retail sales trends and disposable income metrics will directly impact demand for mid-to-high-end baijiu products.
+### Key Indicators
+Focus on channel inventory, high-end product growth, and macro consumption data to guide portfolio decisions.
 """)
