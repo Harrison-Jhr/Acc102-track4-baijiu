@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
 
 # --------------------------
 # Page Setup
@@ -34,9 +35,8 @@ stock_list = {
 
 # --------------------------
 # CORE FIX: Generate fixed length data (1000 days = 2022-2026 approx)
-# This function guarantees price and vol have the SAME length.
 # --------------------------
-def generate_fixed_data(name, total_days=1000):
+def generate_fixed_data(name, total_days=1010):
     # Base parameters
     base = {
         "Kweichow Moutai": 1850, "Wuliangye": 160, "Luzhou Laojiao": 190,
@@ -66,36 +66,31 @@ def generate_fixed_data(name, total_days=1000):
     # Generate price
     np.random.seed(42 + hash(name) % 1000)
     price = [base]
-    # Generate daily returns for fixed total_days
     daily_returns = np.random.normal(0, vol/np.sqrt(252), total_days)
     
-    # Apply annual trends by year segments
-    # 2022 (252d), 2023 (252d), 2024 (252d), 2025 (252d), 2026 (102d)
-    # Total: 1010 days. We use 1000 for clean fixed size.
+    # Segment returns by year
     seg1, seg2, seg3, seg4, seg5 = 252, 252, 252, 252, 102
-    total = seg1+seg2+seg3+seg4+seg5
-    
-    # 2022
-    for r in daily_returns[:seg1]: price.append(price[-1] * (1 + r + year_returns[0]/252))
-    # 2023
-    for r in daily_returns[seg1:seg1+seg2]: price.append(price[-1] * (1 + r + year_returns[1]/252))
-    # 2024
-    for r in daily_returns[seg1+seg2:seg1+seg2+seg3]: price.append(price[-1] * (1 + r + year_returns[2]/252))
-    # 2025
-    for r in daily_returns[seg1+seg2+seg3:seg1+seg2+seg3+seg4]: price.append(price[-1] * (1 + r + year_returns[3]/252))
-    # 2026
-    for r in daily_returns[seg1+seg2+seg3+seg4:]: price.append(price[-1] * (1 + r + year_returns[4]/102))
+    for i in range(seg1):
+        price.append(price[-1] * (1 + daily_returns[i] + year_returns[0]/seg1))
+    for i in range(seg1, seg1+seg2):
+        price.append(price[-1] * (1 + daily_returns[i] + year_returns[1]/seg2))
+    for i in range(seg1+seg2, seg1+seg2+seg3):
+        price.append(price[-1] * (1 + daily_returns[i] + year_returns[2]/seg3))
+    for i in range(seg1+seg2+seg3, seg1+seg2+seg3+seg4):
+        price.append(price[-1] * (1 + daily_returns[i] + year_returns[3]/seg4))
+    for i in range(seg1+seg2+seg3+seg4, total_days):
+        price.append(price[-1] * (1 + daily_returns[i] + year_returns[4]/seg5))
 
-    price = price[1:]  # Remove initial base
+    price = price[1:]
     
-    # Generate VOLUME with EXACT SAME length as price
+    # Volume with EXACT same length
     vol_size = np.random.randint(30000, 400000, size=len(price))
 
     # Date index
     start_date = datetime(2022, 1, 1)
     dates = pd.date_range(start_date, periods=len(price), freq="D")
 
-    # Create DataFrame (strict length match)
+    # Create DataFrame
     df = pd.DataFrame({
         "close": price,
         "vol": vol_size
@@ -118,8 +113,7 @@ def generate_fixed_data(name, total_days=1000):
 # --------------------------
 # Generate CSI 300 Data
 # --------------------------
-def generate_csi300():
-    total_days = 1010
+def generate_csi300(total_days=1010):
     base = 4900
     year_returns = [0.02, 0.17, -0.05, 0.16, 0.01]
     vol = 0.18
@@ -128,13 +122,17 @@ def generate_csi300():
     price = [base]
     daily_r = np.random.normal(0, vol/np.sqrt(252), total_days)
     
-    # 2022-2026 trend
     seg1, seg2, seg3, seg4, seg5 = 252, 252, 252, 252, 102
-    for r in daily_r[:seg1]: price.append(price[-1]*(1+r+year_returns[0]/252))
-    for r in daily_r[seg1:seg1+seg2]: price.append(price[-1]*(1+r+year_returns[1]/252))
-    for r in daily_r[seg1+seg2:seg1+seg2+seg3]: price.append(price[-1]*(1+r+year_returns[2]/252))
-    for r in daily_r[seg1+seg2+seg3:seg1+seg2+seg3+seg4]: price.append(price[-1]*(1+r+year_returns[3]/252))
-    for r in daily_r[seg1+seg2+seg3+seg4:]: price.append(price[-1]*(1+r+year_returns[4]/102))
+    for i in range(seg1):
+        price.append(price[-1] * (1 + daily_r[i] + year_returns[0]/seg1))
+    for i in range(seg1, seg1+seg2):
+        price.append(price[-1] * (1 + daily_r[i] + year_returns[1]/seg2))
+    for i in range(seg1+seg2, seg1+seg2+seg3):
+        price.append(price[-1] * (1 + daily_r[i] + year_returns[2]/seg3))
+    for i in range(seg1+seg2+seg3, seg1+seg2+seg3+seg4):
+        price.append(price[-1] * (1 + daily_r[i] + year_returns[3]/seg4))
+    for i in range(seg1+seg2+seg3+seg4, total_days):
+        price.append(price[-1] * (1 + daily_r[i] + year_returns[4]/seg5))
     
     price = price[1:]
     start_date = datetime(2022, 1, 1)
@@ -161,7 +159,7 @@ with st.sidebar:
     c6 = st.checkbox("Drawdown", True)
 
 # --------------------------
-# Load Data (now guaranteed to have the same length)
+# Load Data
 # --------------------------
 df1 = generate_fixed_data(stock1)
 df2 = generate_fixed_data(stock2) if compare_mode else None
@@ -279,3 +277,121 @@ else:
         plot_rsi(ax, df1, "#c8102e")
         plot_rsi(ax, df2, "#0066cc")
         ax.legend([stock1, stock2])
+        ax.grid(alpha=0.3)
+        st.pyplot(fig)
+
+    if c5:
+        st.subheader("⚡ Volatility Comparison")
+        fig, ax = plt.subplots(figsize=(14, 3))
+        plot_vola(ax, df1, "#c8102e")
+        plot_vola(ax, df2, "#0066cc")
+        ax.legend([stock1, stock2])
+        ax.grid(alpha=0.3)
+        st.pyplot(fig)
+
+    if c6:
+        st.subheader("📉 Drawdown Comparison")
+        fig, ax = plt.subplots(figsize=(14, 3))
+        plot_dd(ax, df1, "#c8102e")
+        plot_dd(ax, df2, "#0066cc")
+        ax.legend([stock1, stock2])
+        ax.grid(alpha=0.3)
+        st.pyplot(fig)
+
+# --------------------------
+# Performance Metrics Table
+# --------------------------
+st.divider()
+st.subheader("📋 Performance Metrics")
+
+def get_metrics(df):
+    total_ret = (df["close"].iloc[-1] / df["close"].iloc[0] - 1) * 100
+    avg_vol = df["vol"].mean()
+    avg_rsi = df["rsi"].mean()
+    avg_volatility = df["volatility"].mean()
+    max_drawdown = df["drawdown"].min() * 100
+    return [
+        f"{total_ret:.1f}%",
+        f"{avg_vol:.0f}",
+        f"{avg_rsi:.1f}",
+        f"{avg_volatility:.2f}",
+        f"{max_drawdown:.1f}%"
+    ]
+
+if not compare_mode:
+    metrics = get_metrics(df1)
+    df_summary = pd.DataFrame({
+        "Metric": ["Total Return", "Avg Volume", "Avg RSI", "Avg Volatility", "Max Drawdown"],
+        stock1: metrics
+    })
+else:
+    m1 = get_metrics(df1)
+    m2 = get_metrics(df2)
+    df_summary = pd.DataFrame({
+        "Metric": ["Total Return", "Avg Volume", "Avg RSI", "Avg Volatility", "Max Drawdown"],
+        stock1: m1,
+        stock2: m2
+    })
+
+st.dataframe(df_summary, hide_index=True, use_container_width=True)
+
+# --------------------------
+# Professional Analysis & Recommendations
+# --------------------------
+st.divider()
+st.subheader("📄 Professional Analysis & Strategic Recommendations")
+
+if not compare_mode:
+    tr = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    av = df1["volatility"].mean()
+    max_dd = df1["drawdown"].min() * 100
+
+    st.markdown(f"""
+### 1. Performance Review: {stock1} (2022–2026)
+- **Total Return**: {tr:.1f}%
+- **Avg Volatility**: {av:.2f}
+- **Max Drawdown**: {max_dd:.1f}%
+- **Trend**: {'Sustained Uptrend' if tr > 5 else 'Range-Bound' if tr > -5 else 'Weak Downtrend'}
+""")
+
+    if tr > 5:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Momentum**: The stock maintains a positive trajectory, supported by brand fundamentals and sector tailwinds.
+- **Entry Strategy**: Core positions can be established during pullbacks to moving average support levels.
+- **Risk Considerations**: Monitor macro liquidity and sector rotation risks.
+""")
+    elif tr > -5:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Trend**: The stock is consolidating in a range, lacking clear near-term catalysts.
+- **Positioning**: Adopt a "wait-and-see" approach, awaiting confirmed breakout/breakdown signals.
+""")
+    else:
+        st.markdown("""
+### 2. Strategic Outlook
+- **Trend**: The stock exhibits weak momentum, reflecting cautious market sentiment.
+- **Action**: Aggressive buying is not recommended. Wait for stabilization and reversal signals.
+""")
+
+else:
+    tr1 = (df1["close"].iloc[-1] / df1["close"].iloc[0] - 1) * 100
+    tr2 = (df2["close"].iloc[-1] / df2["close"].iloc[0] - 1) * 100
+    av1 = df1["volatility"].mean()
+    av2 = df2["volatility"].mean()
+
+    better_ret = stock1 if tr1 > tr2 else stock2
+    safer = stock1 if av1 < av2 else stock2
+
+    st.markdown(f"""
+### 1. Comparative Performance Review
+- **Relative Returns**: {better_ret} outperformed {stock2 if better_ret == stock1 else stock1} ({max(tr1, tr2):.1f}% vs {min(tr1, tr2):.1f}%).
+- **Risk Profile**: {safer} exhibits lower volatility ({min(av1, av2):.2f}), indicating a more stable price path.
+""")
+
+    st.markdown(f"""
+### 2. Strategic Recommendations
+- **Growth-Focused**: {better_ret} is preferred for investors seeking capital appreciation.
+- **Risk-Averse**: {safer} is more suitable for investors prioritizing stability.
+- **Sector Context**: Both names benefit from baijiu consumption trends. Monitor inventory cycles and pricing power developments.
+""")
