@@ -1,0 +1,46 @@
+date,stock,close,vol
+2022-01-01,Kweichow Moutai,1850.0,125000
+2022-01-02,Kweichow Moutai,1842.3,131000
+2022-01-03,Kweichow Moutai,1855.1,128000
+2022-01-04,Kweichow Moutai,1860.2,135000
+2022-01-05,Kweichow Moutai,1848.5,129000
+2022-01-01,Wuliangye,160.0,225000
+2022-01-02,Wuliangye,158.2,231000
+2022-01-03,Wuliangye,159.5,228000
+2022-01-04,Wuliangye,161.3,235000
+2022-01-05,Wuliangye,159.8,229000
+2022-01-01,Luzhou Laojiao,190.0,185000
+2022-01-02,Luzhou Laojiao,188.3,191000
+2022-01-03,Luzhou Laojiao,192.1,188000
+2022-01-04,Luzhou Laojiao,193.2,195000
+2022-01-05,Luzhou Laojiao,191.5,189000
+2022-01-01,Shanxi Fenjiu,280.0,175000
+2022-01-02,Shanxi Fenjiu,278.2,181000
+2022-01-03,Shanxi Fenjiu,282.5,178000
+2022-01-04,Shanxi Fenjiu,283.3,185000
+2022-01-05,Shanxi Fenjiu,281.8,179000
+2022-01-01,Yanghe Distillery,110.0,245000
+2022-01-02,Yanghe Distillery,109.2,251000
+2022-01-03,Yanghe Distillery,111.5,248000
+2022-01-04,Yanghe Distillery,112.3,255000
+2022-01-05,Yanghe Distillery,110.8,249000
+2022-01-01,Gujing Gongjiu,180.0,165000
+2022-01-02,Gujing Gongjiu,178.2,171000
+2022-01-03,Gujing Gongjiu,182.5,168000
+2022-01-04,Gujing Gongjiu,183.3,175000
+2022-01-05,Gujing Gongjiu,181.8,169000
+2022-01-01,Shede Spirits,120.0,155000
+2022-01-02,Shede Spirits,119.2,161000
+2022-01-03,Shede Spirits,121.5,158000
+2022-01-04,Shede Spirits,122.3,165000
+2022-01-05,Shede Spirits,120.8,159000
+2022-01-01,Jiugui Liquor,90.0,145000
+2022-01-02,Jiugui Liquor,89.2,151000
+2022-01-03,Jiugui Liquor,91.5,148000
+2022-01-04,Jiugui Liquor,92.3,155000
+2022-01-05,Jiugui Liquor,90.8,149000
+2022-01-01,Shunxin Agriculture,45.0,325000
+2022-01-02,Shunxin Agriculture,44.2,331000
+2022-01-03,Shunxin Agriculture,45.5,328000
+2022-01-04,Shunxin Agriculture,46.3,335000
+2022-01-05,Shunxin Agriculture,45.8,329000
