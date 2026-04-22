@@ -1,72 +1,99 @@
 date,stock,close,vol
-2022-01-01,Kweichow Moutai,1850.0,125000
-2022-01-02,Kweichow Moutai,1845.2,126000
-2022-01-03,Kweichow Moutai,1851.7,127000
-2022-01-04,Kweichow Moutai,1858.3,129000
-2022-01-05,Kweichow Moutai,1849.1,128000
-2022-01-06,Kweichow Moutai,1860.0,130000
-2022-01-07,Kweichow Moutai,1865.5,131000
-2022-01-08,Kweichow Moutai,1870.1,132000
-2022-01-09,Kweichow Moutai,1875.3,133000
-2022-01-10,Kweichow Moutai,1880.2,134000
-2022-12-30,Kweichow Moutai,1910.5,139000
-2022-12-31,Kweichow Moutai,1915.3,140000
-2023-01-01,Kweichow Moutai,1920.1,141000
-2023-12-30,Kweichow Moutai,1935.7,144000
-2023-12-31,Kweichow Moutai,1940.2,145000
-2024-01-01,Kweichow Moutai,1910.3,142000
-2024-12-30,Kweichow Moutai,1925.9,144500
-2024-12-31,Kweichow Moutai,1930.1,145000
-2025-01-01,Kweichow Moutai,1950.4,146000
-2025-12-30,Kweichow Moutai,1968.3,147500
-2025-12-31,Kweichow Moutai,1970.5,148000
-2026-01-01,Kweichow Moutai,1975.1,148200
-2026-04-21,Kweichow Moutai,1982.7,149000
-2022-01-01,Wuliangye,160.0,225000
-2022-12-31,Wuliangye,164.3,229000
-2023-12-31,Wuliangye,167.8,232000
-2024-12-31,Wuliangye,165.4,231000
-2025-12-31,Wuliangye,169.2,233000
-2026-04-21,Wuliangye,172.1,235000
-2022-01-01,Luzhou Laojiao,190.0,185000
-2022-12-31,Luzhou Laojiao,193.5,187000
-2023-12-31,Luzhou Laojiao,197.2,189000
-2024-12-31,Luzhou Laojiao,199.4,190000
-2025-12-31,Luzhou Laojiao,202.7,191000
-2026-04-21,Luzhou Laojiao,205.3,192000
-2022-01-01,Shanxi Fenjiu,280.0,175000
-2022-12-31,Shanxi Fenjiu,284.6,177000
-2023-12-31,Shanxi Fenjiu,288.9,179000
-2024-12-31,Shanxi Fenjiu,291.2,180000
-2025-12-31,Shanxi Fenjiu,297.4,182000
-2026-04-21,Shanxi Fenjiu,302.8,184000
-2022-01-01,Yanghe Distillery,110.0,245000
-2022-12-31,Yanghe Distillery,112.7,247000
-2023-12-31,Yanghe Distillery,114.2,248000
-2024-12-31,Yanghe Distillery,115.8,249000
-2025-12-31,Yanghe Distillery,117.3,250000
-2026-04-21,Yanghe Distillery,118.9,251000
-2022-01-01,Gujing Gongjiu,180.0,165000
-2022-12-31,Gujing Gongjiu,183.5,167000
-2023-12-31,Gujing Gongjiu,186.9,169000
-2024-12-31,Gujing Gongjiu,189.2,170000
-2025-12-31,Gujing Gongjiu,193.6,172000
-2026-04-21,Gujing Gongjiu,195.8,173000
-2022-01-01,Shede Spirits,120.0,155000
-2022-12-31,Shede Spirits,122.7,157000
-2023-12-31,Shede Spirits,124.3,158000
-2024-12-31,Shede Spirits,126.1,159000
-2025-12-31,Shede Spirits,127.8,160000
-2026-04-21,Shede Spirits,129.8,161000
-2022-01-01,Jiugui Liquor,90.0,145000
-2022-12-31,Jiugui Liquor,91.8,147000
-2023-12-31,Jiugui Liquor,93.2,148000
-2024-12-31,Jiugui Liquor,94.7,149000
-2025-12-31,Jiugui Liquor,96.1,150000
-2026-04-21,Jiugui Liquor,97.2,151000
-2022-01-01,Shunxin Agriculture,45.0,325000
-2022-12-31,Shunxin Agriculture,46.1,326000
-2023-12-31,Shunxin Agriculture,46.9,327000
-2024-12-31,Shunxin Agriculture,47.5,328000
-2025-12-31,Shunxin Agriculture,48.3,329000
-2026-04-21,Shunxin Agriculture,48.9,330000
+2022-01-01,Kweichow Moutai,1850,125000
+2022-07-01,Kweichow Moutai,1720,126000
+2022-12-31,Kweichow Moutai,1650,127000
+2023-07-01,Kweichow Moutai,1820,128000
+2023-12-31,Kweichow Moutai,1920,129000
+2024-07-01,Kweichow Moutai,1800,130000
+2024-12-31,Kweichow Moutai,1910,131000
+2025-07-01,Kweichow Moutai,2010,132000
+2025-12-31,Kweichow Moutai,2070,133000
+2026-04-21,Kweichow Moutai,2020,134000
+
+2022-01-01,Wuliangye,160,225000
+2022-07-01,Wuliangye,148,226000
+2022-12-31,Wuliangye,145,227000
+2023-07-01,Wuliangye,155,228000
+2023-12-31,Wuliangye,158,229000
+2024-07-01,Wuliangye,152,230000
+2024-12-31,Wuliangye,156,231000
+2025-07-01,Wuliangye,162,232000
+2025-12-31,Wuliangye,165,233000
+2026-04-21,Wuliangye,169,234000
+
+2022-01-01,Luzhou Laojiao,190,185000
+2022-07-01,Luzhou Laojiao,178,186000
+2022-12-31,Luzhou Laojiao,175,187000
+2023-07-01,Luzhou Laojiao,188,188000
+2023-12-31,Luzhou Laojiao,192,189000
+2024-07-01,Luzhou Laojiao,185,190000
+2024-12-31,Luzhou Laojiao,188,191000
+2025-07-01,Luzhou Laojiao,196,192000
+2025-12-31,Luzhou Laojiao,201,193000
+2026-04-21,Luzhou Laojiao,205,194000
+
+2022-01-01,Shanxi Fenjiu,280,175000
+2022-07-01,Shanxi Fenjiu,262,176000
+2022-12-31,Shanxi Fenjiu,258,177000
+2023-07-01,Shanxi Fenjiu,275,178000
+2023-12-31,Shanxi Fenjiu,282,179000
+2024-07-01,Shanxi Fenjiu,273,180000
+2024-12-31,Shanxi Fenjiu,279,181000
+2025-07-01,Shanxi Fenjiu,292,182000
+2025-12-31,Shanxi Fenjiu,298,183000
+2026-04-21,Shanxi Fenjiu,302,184000
+
+2022-01-01,Yanghe Distillery,110,245000
+2022-07-01,Yanghe Distillery,102,246000
+2022-12-31,Yanghe Distillery,98,247000
+2023-07-01,Yanghe Distillery,106,248000
+2023-12-31,Yanghe Distillery,112,249000
+2024-07-01,Yanghe Distillery,108,250000
+2024-12-31,Yanghe Distillery,113,251000
+2025-07-01,Yanghe Distillery,116,252000
+2025-12-31,Yanghe Distillery,117,253000
+2026-04-21,Yanghe Distillery,118,254000
+
+2022-01-01,Gujing Gongjiu,180,165000
+2022-07-01,Gujing Gongjiu,168,166000
+2022-12-31,Gujing Gongjiu,165,167000
+2023-07-01,Gujing Gongjiu,178,168000
+2023-12-31,Gujing Gongjiu,182,169000
+2024-07-01,Gujing Gongjiu,176,170000
+2024-12-31,Gujing Gongjiu,181,171000
+2025-07-01,Gujing Gongjiu,189,172000
+2025-12-31,Gujing Gongjiu,193,173000
+2026-04-21,Gujing Gongjiu,195,174000
+
+2022-01-01,Shede Spirits,120,155000
+2022-07-01,Shede Spirits,112,156000
+2022-12-31,Shede Spirits,108,157000
+2023-07-01,Shede Spirits,116,158000
+2023-12-31,Shede Spirits,121,159000
+2024-07-01,Shede Spirits,118,160000
+2024-12-31,Shede Spirits,123,161000
+2025-07-01,Shede Spirits,126,162000
+2025-12-31,Shede Spirits,128,163000
+2026-04-21,Shede Spirits,129,164000
+
+2022-01-01,Jiugui Liquor,90,145000
+2022-07-01,Jiugui Liquor,82,146000
+2022-12-31,Jiugui Liquor,79,147000
+2023-07-01,Jiugui Liquor,86,148000
+2023-12-31,Jiugui Liquor,91,149000
+2024-07-01,Jiugui Liquor,88,150000
+2024-12-31,Jiugui Liquor,92,151000
+2025-07-01,Jiugui Liquor,95,152000
+2025-12-31,Jiugui Liquor,96,153000
+2026-04-21,Jiugui Liquor,97,154000
+
+2022-01-01,Shunxin Agriculture,45,325000
+2022-07-01,Shunxin Agriculture,42,326000
+2022-12-31,Shunxin Agriculture,40,327000
+2023-07-01,Shunxin Agriculture,43,328000
+2023-12-31,Shunxin Agriculture,46,329000
+2024-07-01,Shunxin Agriculture,44,330000
+2024-12-31,Shunxin Agriculture,47,331000
+2025-07-01,Shunxin Agriculture,48,332000
+2025-12-31,Shunxin Agriculture,48.5,333000
+2026-04-21,Shunxin Agriculture,48.9,334000
